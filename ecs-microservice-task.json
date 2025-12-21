@@ -1,0 +1,31 @@
+{
+  "family": "ecs-microservice-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::766377908037:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::766377908037:role/ecsTaskExecutionRole",
+
+  "containerDefinitions": [
+    {
+      "name": "ecs-microservice",
+      "image": "766377908037.dkr.ecr.us-east-1.amazonaws.com/ecs-microservice:latest",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/ecs-microservice",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ]
+}
