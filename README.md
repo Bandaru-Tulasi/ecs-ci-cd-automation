@@ -85,62 +85,28 @@ CloudWatch Logs
 
 ---
 
-# 🛠 Project Setup
-
-## 1️⃣ Create ECR Repository
-
-Example:
-
-ecs-microservice
-
-Copy the repository URI:
-
-766377908037.dkr.ecr.us-east-1.amazonaws.com/ecs-microservice
-
----
-
-## 2️⃣ Create ECS Fargate Infrastructure
-
-ECS Cluster
-
-Task Definition
-
-Service (connected to ALB)
-
-Security Groups
-
-IAM execution role
-
----
-
-## 3️⃣ Configure GitHub Secrets
-
-Go to:
+## 🛠️ Project Structure
 
 ```
-GitHub → Your Repo → Settings → Secrets and Variables → Actions
+ecs-ci-cd-automation/
+ ├── app.py
+ ├── Dockerfile
+ ├── requirements.txt
+ ├── ecs-microservice-task.json
+ ├── .github/
+ │   └── workflows/
+ │       └── deploy.yml
+ └── README.md
 
 ```
-
-Add:
-
-Secret Name	Value
-AWS_ACCESS_KEY_ID	IAM user key
-AWS_SECRET_ACCESS_KEY	IAM user secret
-AWS_REGION	us-east-1
-ECR_REGISTRY	766377908037.dkr.ecr.us-east-1.amazonaws.com
-ECR_REPOSITORY	ecs-microservice
-
 ---
 
-##📄 Files Included
+## ⚙️ Step-by-Step Setup
 
-
-app.py
+## 1️⃣ Create Flask Application (app.py)
 
 ```
 from flask import Flask
-
 app = Flask(__name__)
 
 @app.route("/")
@@ -151,10 +117,20 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
 
 ```
+---
 
-Dockerfile
+## 2️⃣ Create requirements.txt
 
 ```
+flask
+
+```
+---
+
+## 3️⃣ Create Dockerfile
+
+```
+
 # Use official Python runtime
 FROM python:3.9-slim
 
@@ -177,16 +153,14 @@ EXPOSE 8080
 CMD ["python", "app.py"]
 
 ```
+---
 
-requirements.txt
+## 4️⃣ Create ECS Task Definition JSON
 
-```
-flask
-
-```
-ecs-microservice-task.json
+File: ecs-microservice-task.json
 
 ```
+
 {
   "family": "ecs-microservice-task",
   "networkMode": "awsvpc",
@@ -220,8 +194,17 @@ ecs-microservice-task.json
 }
 
 ```
+---
 
-GitHub Actions Workflow — deploy.yml
+## 🟦 5️⃣ Create GitHub Actions Workflow
+
+Create the folder:
+
+```
+.github/workflows/deploy.yml
+
+```
+Add this content:
 
 ```
 name: Deploy to ECS Fargate
@@ -278,35 +261,76 @@ jobs:
 ```
 ---
 
-## 🚀 How Deployment Works
+##🔐 6️⃣ Add GitHub Secrets
 
-Every push to main triggers:
+Go to:
 
-CI Phase
+```
+GitHub → Repo → Settings → Secrets → Actions
 
-GitHub Actions pulls the code
+```
 
-Docker image builds
+Add:
 
-Image pushed to ECR
+```
+Secret Name	Value
+AWS_ACCESS_KEY_ID	IAM user Access Key
+AWS_SECRET_ACCESS_KEY	IAM user Secret Key
 
-CD Phase
+```
 
-ECS Task Definition updated
+IAM user must have permissions:
 
-ECS Service deploys new task
+ECR Full Access
 
-ALB starts serving updated version
+ECS Full Access
+
+CloudWatch Logs
+
+IAM ReadOnly
 
 ---
 
-##🌍 Live Application URL
+##🚀 7️⃣ CI/CD Pipeline Workflow
+
+Whenever you run:
 
 ```
-http://<your-application-load-balancer>.amazonaws.com/
+git add .
+git commit -m "Update"
+git push origin main
 
 ```
+
+GitHub Actions automatically:
+
+Builds Docker image
+
+Pushes to ECR
+
+Renders new task definition
+
+Deploys to ECS
+
+ALB shows new version
+
 ---
+
+## 🌍 8️⃣ Test Your Deployment
+
+Visit your ALB DNS name:
+
+```
+http://ecs-microservice-alb-xxxxxxxx.us-east-1.elb.amazonaws.com/
+
+```
+
+You should see:
+
+```
+Hello from NEW VERSION deployed via CI/CD!
+
+```
 
 ##📸 Screenshots
 
