@@ -331,29 +331,28 @@ You should see:
 Hello from NEW VERSION deployed via CI/CD!
 
 ```
+## 📸 Screenshots Included
 
-##📸 Screenshots
+This project includes screenshots for verification and demonstration:
 
-Include screenshots of:
+1. **ECR Repository** – showing image uploads and latest digest  
+2. **ECS Cluster** – cluster overview  
+3. **ECS Service** – service deployment details  
+4. **Running Task** – task with correct image and port mapping  
+5. **Task Definition** – updated revisions and container config  
+6. **Application Load Balancer** – listeners and DNS name  
+7. **Target Group** – healthy target and routing  
+8. **GitHub Actions Workflow** – successful CI/CD runs  
+9. **Application Output** – updated version message
 
-ECR Repository
-
-ECS Cluster
-
-ECS Service
-
-Running Task
-
-Task Definition
-
-ALB Load Balancer
-
-Pipeline Success (GitHub Actions run)
+---
 
 Placed them in:
 
-screenshots/
+```
+Screenshts.zip
 
+```
 ---
 
 ##💡 Future Enhancements
